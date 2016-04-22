@@ -1,0 +1,200 @@
+{-
+anny fm: something to say
+originally recorded @ home, elephant & castle, 15th march 2014
+released on "a tribute to kurt cobain" compilation on fwonk*: http://fwonk.co.uk/129/
+      __
+  c|||  o_
+c||||| ___o
+https://soundcloud.com/anny-fm/something-to-say
+-}
+
+cps (106/60)
+
+-- shortfix for bps->cps
+let cf = slow 2
+
+-- fixed iter to reproduce pre-0.6 behaviour
+let iter' n p = slowcat $ map (\i -> ((fromIntegral i)%(fromIntegral n)) ~> p) [0 .. n]
+
+-- guitar-ish
+let ss'stab = s "stab"
+              # n (slow 6 "1 2 3 4 [5 6]/3")
+              # vowel "i"
+
+-- possibly guitar-ish. was never quite sure what this is
+let ss'kurt = s "kurt"
+              # speed "0.6"
+              # shape "0.3"
+              # vowel "u"
+
+-- drums base
+let ss'perc = s "{[bd ~ ~ bd] msg, hh*2}"
+    ss'perc' = s "{[rm ~ ~ rm] msg, hh*2}"
+
+-- vocal
+let ss'verse = s "sitw"
+               # n (slow 8 $ run 8)
+
+-- other vocal
+let ss'chorus = s "sitwc"
+                # n (slow 4 $ run 4)
+
+-- channel defs
+let d'drum = d1
+    d'bass = d2
+    d'voc = d9 -- vocal
+    d'gt = d3 -- guitar [stab]
+    d'kurt = d4
+    d'moog = d5
+
+-- go
+d'gt $ cf $ ss'stab
+  # speed "0.7"
+
+d'gt $ cf $
+  slow 2 $ every 4 (density 2) $ every 2 (density 2) $
+  ss'stab
+  # speed "0.7"
+
+d'voc $ cf $ slow 4 $ ss'verse
+  |+| vowel "e"
+
+d'kurt $ cf $ ss'kurt
+  # n (slow 7 $ run 7)
+
+d'drum $ cf $ slow 2 $ ss'perc
+
+d'kurt $ cf $ s "kurt"
+  # n (slow 4 "5 6 4")
+
+d'gt $ cf $
+  density 2 $ iter 2 $
+  ss'stab
+  # speed "0.7"
+
+d'gt $ cf $
+  density 2 $ iter 2 $
+  ss'stab
+  # speed ((+0.7).(/2) <$> slow 5 sinewave1)
+
+d'voc $ cf $ slow 4 $ ss'chorus
+  # vowel "e"
+
+d'voc $ cf $ slow 4 $
+  iter 3 . striate 4 $
+  ss'chorus
+  # vowel "e"
+
+d'bass $ cf $ striate 4 $ sound "wobble [wobble]/3"
+  # pan (slow 3 sinewave)
+
+-- break down to rebuild
+d'voc silence
+mapM_ ($ silence) [d'drum, d'bass, d'gt, d'kurt]
+
+d'drum $ cf $ slow 2 $ ss'perc
+
+d'voc $ slow 8 $ ss'verse
+  # vowel "e"
+
+d'drum $ cf $
+  every 2 (superimpose $ iter' 3) $
+  slow 2 $ ss'perc
+
+d'gt $ cf $
+  slow 2 $ every 4 (density 2) $ every 2 (density 2) $
+  ss'stab
+  # speed "0.7"
+
+-- quickly
+d'kurt $ cf $ ss'kurt
+  # n (slow 7 $ run 7)
+
+d'voc $ cf $ slow 4 $ ss'chorus
+  # vowel "e"
+
+d'kurt $ cf $ ss'kurt
+  # n (slow 4 "5 6 4")
+
+d'moog $ cf $
+  slow 8 . striate 8 $
+  0.25 <~ s "moog"
+  # n (slow 2 "0 1")
+  # speed "0.6 0.7"
+  # pan (slow 8 sinewave)
+
+d'voc $ cf $ slow 2 $
+  iter 3 . striate 4 $
+  ss'chorus
+  # vowel "e"
+
+d'voc $ cf $ slow 2 $
+  iter 3 . striate 4 $
+  ss'chorus
+  # vowel "e"
+  # speed ((+0.5).(*1.2) <$> slow 5 sinewave1)
+
+d'voc $ cf $ slow 4 $ ss'chorus
+  # vowel "e"
+
+-- another breakdown
+mapM_ ($ silence) [d'drum, d'gt, d'kurt]
+
+d'drum $ cf $
+  every 2 (superimpose $ iter' 3) $
+  slow 2 $ ss'perc'
+
+d'voc $ cf $ slow 2 $
+  iter 3 . striate 4 $
+  ss'chorus
+  # vowel "e"
+  # speed ((+0.5).(*1.2) <$> slow 5 sinewave1)
+
+d'voc $ cf $
+  iter 3 . striate 4 $
+  ss'chorus
+  # vowel "e"
+  # speed ((+0.5).(*1.2) <$> slow 5 sinewave1)
+
+-- real drums start... now
+d'drum $ overlay (s "house") $ cf $
+  every 2 (superimpose $ iter' 3) $
+  slow 2 $ ss'perc'
+
+d'voc silence
+
+d'bass $ cf $ striate 4 $ sound "wobble [wobble]/3"
+  # pan (slow 3 sinewave)
+
+d'drum $ overlay (s "house") $ cf $
+  every 2 (superimpose $ iter' 3) $
+  slow 2 $ ss'perc
+
+d'gt $ cf $
+  density 2 $ iter 2 $
+  ss'stab
+  # speed ((+0.7).(/2) <$> slow 5 sinewave1)
+
+-- god this is nuts as shit. why did i do this
+d'voc $ cf $
+  iter 3 . striate 4 $
+  ss'chorus
+  # vowel "e"
+  # speed ((+0.5).(*1.2) <$> slow 5 sinewave1)
+
+d'kurt $ cf $ ss'kurt
+  # n (slow 4 "5 6 4")
+
+d'bass $ cf $ striate 4 $ sound "bass [bass:1]/3"
+  # pan (slow 3 sinewave)
+
+d'drum $ overlay (s "house" # gain "1.5") $ cf $
+  every 2 (superimpose $ iter' 3) $
+  slow 2 $ ss'perc
+
+-- quickly
+d'voc $ slow 8 $ ss'verse # vowel "e"
+mapM_ ($ silence) [d'bass, d'gt, d'kurt, d'moog]
+d'drum $ cf $ slow 2 $ ss'perc
+
+hush
