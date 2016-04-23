@@ -14,6 +14,8 @@ I haven't bothered retaining the original source in this repo because a) it's br
 
 `something-to-say.tidal` contains a rough reformulation of the original composition, with some tweaks reflecting how I recall wanting it to sound. This includes reusable parts and full composition notes, as well as named channels because I'm starting to get confused after my fifth beer while working on this recovery job.
 
+`something-to-say.megalet.tidal` contains a big `let` directive that can be eval'd (`C-c C-e`) all at once to init variables used in the song.
+
 ## Sample attributions
 
 ```

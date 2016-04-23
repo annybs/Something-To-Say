@@ -1,0 +1,26 @@
+{-
+anny fm: something to say megalet
+see something-to-say.tidal for full composition
+-}
+
+let cf = slow 2
+    iter' n p = slowcat $ map (\i -> ((fromIntegral i)%(fromIntegral n)) ~> p) [0 .. n]
+    ss'stab = s "stab"
+              # n (slow 6 "1 2 3 4 [5 6]/3")
+              # vowel "i"
+    ss'kurt = s "kurt"
+              # speed "0.6"
+              # shape "0.3"
+              # vowel "u"
+    ss'perc = s "{[bd ~ ~ bd] msg, hh*2}"
+    ss'perc' = s "{[rm ~ ~ rm] msg, hh*2}"
+    ss'verse = s "sitw"
+               # n (slow 8 $ run 8)
+    ss'chorus = s "sitwc"
+                # n (slow 4 $ run 4)
+    d'drum = d1
+    d'bass = d2
+    d'voc = d9 -- vocal
+    d'gt = d3 -- guitar [stab]
+    d'kurt = d4
+    d'moog = d5
