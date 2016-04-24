@@ -10,6 +10,9 @@ soundcloud.com/anny-fm/something-to-say
 
 cps (106/60)
 
+-- multi-silence
+let msil = mapM_ ($ silence)
+
 -- shortfix for bps->cps
 let cf = slow 2
 
@@ -42,10 +45,10 @@ let ss'chorus = s "sitwc"
 -- channel defs
 let d'drum = d1
     d'bass = d2
-    d'voc = d9 -- vocal
     d'gt = d3 -- guitar [stab]
     d'kurt = d4
     d'moog = d5
+    d'voc = d9 -- vocal
 
 -- go
 d'gt $ cf $ ss'stab
@@ -90,7 +93,7 @@ d'bass $ cf $ striate 4 $ sound "wobble [wobble]/3"
 
 -- break down to rebuild
 d'voc silence
-mapM_ ($ silence) [d'drum, d'bass, d'gt, d'kurt]
+msil [d'drum, d'bass, d'gt, d'kurt]
 
 d'drum $ cf $ slow 2 $ ss'perc
 
@@ -138,7 +141,7 @@ d'voc $ cf $ slow 4 $ ss'chorus
   # vowel "e"
 
 -- another breakdown
-mapM_ ($ silence) [d'drum, d'gt, d'kurt]
+msil [d'drum, d'gt, d'kurt]
 
 d'drum $ cf $
   every 2 (superimpose $ iter' 3) $
@@ -194,7 +197,7 @@ d'drum $ overlay (s "house" # gain "1.5") $ cf $
 
 -- quickly
 d'voc $ slow 8 $ ss'verse # vowel "e"
-mapM_ ($ silence) [d'bass, d'gt, d'kurt, d'moog]
+msil [d'bass, d'gt, d'kurt, d'moog]
 d'drum $ cf $ slow 2 $ ss'perc
 
 hush
