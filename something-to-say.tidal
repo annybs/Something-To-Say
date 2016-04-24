@@ -60,7 +60,7 @@ d'gt $ cf $
   # speed "0.7"
 
 d'voc $ cf $ slow 4 $ ss'verse
-  |+| vowel "e"
+  # vowel "e"
 
 d'kurt $ cf $ ss'kurt
   # n (slow 7 $ run 7)
